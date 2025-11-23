@@ -57,6 +57,28 @@ public class InteractListener implements Listener {
             assert bsm != null;
             plugin.getShulkerManager().openShulkerBoxInventory(e.getPlayer(), item, SlotType.HOTBAR, e.getPlayer().getInventory().getHeldItemSlot());
         } else if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            // Handle opening shulker with right-click on block (when not sneaking)
+            if (plugin.getSettings().getBoolean("shulkers.enable_right_click_block_open", false) && !player.isSneaking()) {
+                ItemStack item = player.getInventory().getItemInMainHand();
+
+                if (item.getAmount() > 1 || item.getAmount() < 1) return; // Do not open if stacked: compatible stacking plugin
+                if (!MaterialUtil.isShulkerBox(item.getType())) return;
+                if (Check.isWorldDisabled(player.getWorld().getName(), e.getEventName())) {
+                    MessageKeys.send(player, MessageKeys.DISABLED_WORLD.get());
+                    return;
+                }
+                if (Check.isRegionDisabled(player.getLocation(), e.getEventName())) {
+                    MessageKeys.send(player, MessageKeys.DISABLED_REGION.get());
+                    return;
+                }
+
+                BlockStateMeta bsm = (BlockStateMeta) item.getItemMeta();
+                assert bsm != null;
+                plugin.getShulkerManager().openShulkerBoxInventory(player, item, SlotType.HOTBAR, player.getInventory().getHeldItemSlot());
+                e.setCancelled(true);
+                return;
+            }
+
             /*
              * This prevents players from storing a shulker box
              * in a decorated pot while a shulker box inventory 

@@ -9,7 +9,6 @@ import com.krazy.shulkers.data.Config;
 import com.krazy.shulkers.listeners.InteractListener;
 import com.krazy.shulkers.listeners.InventoryCloseListener;
 import com.krazy.shulkers.manager.ShulkerManager;
-import com.krazy.shulkers.manager.chestsort.ChestSortManagerImpl;
 
 public class KrazyShulkers extends JavaPlugin {
 
@@ -41,13 +40,6 @@ public class KrazyShulkers extends JavaPlugin {
             if(settings.getBoolean("shulkers.enable_worldguard_hook", true)) {
                 hasWorldGuard = true;
                 getLogger().info("KrazyShulkers successfully hooked to WorldGuard");
-            }
-        }
-
-        if(manager.isPluginEnabled("ChestSort")) {
-            if(settings.getBoolean("shulkers.enable_chest_sort", true)) {
-                shulkerManager.setChestSortManager(new ChestSortManagerImpl());
-                getLogger().info("KrazyShulkers successfully hooked to ChestSort");
             }
         }
     }
